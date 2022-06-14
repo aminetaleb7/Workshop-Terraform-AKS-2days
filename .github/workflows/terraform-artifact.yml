@@ -27,6 +27,7 @@ jobs:
 
    Terraform-plan:
     runs-on: ubuntu-latest
+    needs: Terraform-validate
     steps:
       - name: Checks-out du repository
         uses: actions/checkout@v2
