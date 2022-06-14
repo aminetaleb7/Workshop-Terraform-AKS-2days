@@ -40,7 +40,7 @@ on:
       name: deployIaC
     needs:
       - Terraform-plan
-      steps:
+   steps:
       - name: Checks-out du repository
         uses: actions/checkout@v2
 
