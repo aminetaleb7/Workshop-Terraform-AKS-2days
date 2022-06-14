@@ -1,0 +1,44 @@
+name: 2 - Workflow CI/CD Terraform
+
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  Build-Terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checks-out du repository
+        uses: actions/checkout@v2
+
+      # Install the needed version of Terraform cli
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform          
+          terraform init -backend-config="sas_token=${{ secrets.BACKENDSTORAGESASTOKEN }}"
+      # https://www.terraform.io/cli/commands/validate
+      - name: Terraform Validate
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform
+          terraform validate
+      # Generates an execution plan for Terraform with tfplan file https://www.terraform.io/cli/commands/plan
+      - name: Terraform Plan
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform
+          terraform plan -var 'AzureSubscriptionID=${{ secrets.SUBSCRIPTIONID }}' -var 'AzureClientSecret=${{ secrets.CLIENTSECRET }}' -var 'AzureClientID=${{ secrets.CLIENTID }}' -var 'AzureTenandID=${{ secrets.TENANTID }}' -lock=false -out=monplan.tfplan
+              
+      # apply a execution plan https://www.terraform.io/cli/commands/apply      
+      - name: Terraform Apply
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform
+          terraform apply -auto-approve -lock=false "monplan.tfplan"
+    
