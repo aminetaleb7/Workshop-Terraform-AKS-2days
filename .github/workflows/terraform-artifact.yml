@@ -18,7 +18,7 @@ jobs:
 
       - name: Terraform Init
         run: |
-          cd ./Terraform/VmSelfRunner        
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform        
           terraform init -backend-config="sas_token=${{ secrets.BACKENDSTORAGESASTOKEN }}"
       - name: Terraform Validate
         run: |
