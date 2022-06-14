@@ -6,7 +6,7 @@ on:
 jobs:
   
    Terraform-validate:
-   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checks-out du repository
         uses: actions/checkout@v2
