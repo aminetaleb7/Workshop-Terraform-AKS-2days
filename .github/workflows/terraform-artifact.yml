@@ -1,8 +1,11 @@
 name: 10 - Workflow CI/CD Terraform-artifact
 on:
   workflow_dispatch:
-      
-  jobs:
+  
+  
+jobs:
+  
+  
    Terraform-plan:
     runs-on: ubuntu-latest
     steps:
@@ -34,13 +37,13 @@ on:
           name: ArtifactTerraform
           path: ./Terraform/Lab4_Pipeline_CI_CD_Terraform/tf.plan
           
-    Terraform-apply:
+   Terraform-apply:
      runs-on: ubuntu-latest
-    environment:
+     environment:
       name: deployIaC
-    needs:
+     needs:
       - Terraform-plan
-   steps:
+     steps:
       - name: Checks-out du repository
         uses: actions/checkout@v2
 
