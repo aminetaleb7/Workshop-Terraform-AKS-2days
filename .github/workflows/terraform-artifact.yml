@@ -1,0 +1,83 @@
+name: 10 - Workflow CI/CD Terraform-artifact
+on:
+  workflow_dispatch:
+  
+  
+jobs:
+  
+   Terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checks-out du repository
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+
+      - name: Terraform Init
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform        
+          terraform init -backend-config="sas_token=${{ secrets.BACKENDSTORAGESASTOKEN }}"
+      - name: Terraform Validate
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform
+          terraform validate
+
+   Terraform-plan:
+    runs-on: ubuntu-latest
+    needs: Terraform-validate
+    steps:
+      - name: Checks-out du repository
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+      - name: Terraform Init
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform      
+          terraform init -backend-config="sas_token=${{ secrets.BACKENDSTORAGESASTOKEN }}"
+      - name: Terraform Plan
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform
+          terraform plan -var 'AzureSubscriptionID=${{ secrets.SUBSCRIPTIONID }}' -var 'AzureClientSecret=${{ secrets.CLIENTSECRET }}' -var 'AzureClientID=${{ secrets.CLIENTID }}' -var 'AzureTenandID=${{ secrets.TENANTID }}' -lock=false -out=monplan.tfplan
+          ls -lisa
+      
+      - name: Upload Artifact 
+        uses: actions/upload-artifact@v3
+        with:
+          name: ArtifactTerraform
+          path: ./Terraform/Lab4_Pipeline_CI_CD_Terraform/monplan.tfplan
+          
+   Terraform-apply:
+     runs-on: ubuntu-latest
+     environment:
+      name: deployIaC
+     needs:
+      - Terraform-plan
+     steps:
+      - name: Checks-out du repository
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+
+      - name: Terraform Init
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform       
+          terraform init -backend-config="sas_token=${{ secrets.BACKENDSTORAGESASTOKEN }}"
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ArtifactTerraform
+          path: ./Terraform/Lab4_Pipeline_CI_CD_Terraform
+
+      - name: Terraform Apply
+        run: |
+          cd ./Terraform/Lab4_Pipeline_CI_CD_Terraform
+          terraform apply -lock=false "monplan.tfplan"
