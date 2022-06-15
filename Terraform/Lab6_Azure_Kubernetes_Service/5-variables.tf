@@ -4,32 +4,32 @@ variable "azure_region" {
   # To get names of Azure Region : az account list-locations
   # To check support of Availability Zone in the Azure Region see https://docs.microsoft.com/bs-latn-ba/azure/availability-zones/az-overview
   type    = string
-  default = "westus2"
+  default = "westeurope"
 }
 
 #  Resource Group Name
 variable "resource_group" {
   type    = string
-  default = "RG-AKSCluster"
+  default = "rg-amine-terraform"
 }
 
 # Virtual Network name
 variable "aks_vnet_name" {
     type = string
-    default = "aksvnet"
+    default = "aksvnet-amine"
 }
 
 
 # AKS Cluster name
 variable "cluster_name" {
   type    = string
-  default = "AKS-000"
+  default = "AKS-000-amine"
 }
 
 #AKS DNS name
 variable "dns_name" {
   type    = string
-  default = "aks0000"
+  default = "aks0000-amine"
 }
 
 # sku of Azure managed K8S control plane
@@ -99,7 +99,7 @@ variable "defaultpool-vmsize" {
   # check if the choosen size is available in Azure region you selected : 
   # az vm list-sizes -l westus2 -o table
   type    = string
-  default = "Standard_D2s_v5"
+  default = "Standard_D2as_v5"
 }
 
 variable "defaultpool-ostype" {
