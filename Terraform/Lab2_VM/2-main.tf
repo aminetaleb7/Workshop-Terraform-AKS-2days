@@ -26,9 +26,16 @@ resource "azurerm_network_interface" "terra_nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.terra_subnet.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.pip.id
   }
 }
 
+resource "azurerm_public_ip" "pip" {
+  name                = "VMpublicip1"
+  resource_group_name = azurerm_resource_group.terra_rg.name
+  location = var.azureRegion
+  allocation_method   = "Static"
+}
 resource "azurerm_linux_virtual_machine" "terra_vm" {
   name                = var.vmName
   resource_group_name = azurerm_resource_group.terra_rg.name
@@ -41,7 +48,7 @@ resource "azurerm_linux_virtual_machine" "terra_vm" {
 
   admin_ssh_key {
     username   = var.vmUser
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCv4Lwm3kKJLxa/Il9d4M/TSkEHzjXjm0Ismufdr3BLfFtqyuUjhaHgezcaHX5TTQDrAAMrKW3G9plPM4XHtoXBnoBYnzsXS9U0T5XQzFHEnOVl3wKp9YTlb+/w92do/korMZWxkOqoqktxS4S+l2VMmgnO7sokGaUs2fc9ujaiCImVUFl627634rn5J//0JFklAP74R/N53M49EEOmP2JNBxoWqeiQyx9x2NY1vDpbz462taEKcG4+H0Kqohaw0gWCiVxAqTU83bl93zwNFpu2GkqD43O6Eo19jGX+cRgUp+hbvDFPhV3DapdcTBKowk3nFjP/JBSbuCBtui9s/q+9"
   }
 
   os_disk {

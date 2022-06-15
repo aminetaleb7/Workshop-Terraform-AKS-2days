@@ -1,7 +1,7 @@
 #  Resource Group Name
 variable "resourceGroupName" {
   type    = string
-  default = "RG-VM"
+  default = "RG-VM-amine"
 }
 
 variable "azureRegion" {
@@ -14,17 +14,17 @@ variable "azureRegion" {
 
 variable "vnetName" {
     type = string
-    default = "Vnet-VM"  
+    default = "Vnet-VM-amine"  
 }
 
 variable "subnetName" {
     type = string
-    default = "Subnet-VM"  
+    default = "Subnet-VM-amine"  
 }
 
 variable "nicName" {
     type = string
-    default = "Nic-1"
+    default = "Nic-1-amine"
   
 }
 

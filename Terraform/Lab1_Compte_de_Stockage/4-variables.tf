@@ -9,11 +9,11 @@ variable "azureRegion" {
 #  Resource Group Name
 variable "resourceGroupName" {
   type    = string
-  default = "RG-AKSCluster"
+  default = "rg-amine-terraform"
 }
 
 #  Storage Account Name
 variable "storageAccountBackendTerraform" {
   type    = string
-  default = "terraformstan" # IMPORTANT mettre ici un nom unique. cf https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming#example-names-storage
+  default = "terraformamine2022" # IMPORTANT mettre ici un nom unique. cf https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming#example-names-storage
 }
